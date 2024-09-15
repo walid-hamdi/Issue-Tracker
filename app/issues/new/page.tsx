@@ -1,22 +1,30 @@
 "use client";
-import { Box, Button, Callout, TextField } from "@radix-ui/themes";
+import { createIssueSchema } from "@/app/validationSchemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Box, Button, Callout, Text, TextField } from "@radix-ui/themes";
 import axios from "axios";
 import "easymde/dist/easymde.min.css";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import SimpleMdeReact from "react-simplemde-editor";
+import { z } from "zod";
 
-interface IssueForm {
-  title: string;
-  description: string;
-}
+type IssueForm = z.infer<typeof createIssueSchema>;
 
 const NewIssuePage = () => {
   const router = useRouter();
   const [error, setError] = useState("");
 
-  const { register, control, handleSubmit } = useForm<IssueForm>();
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IssueForm>({
+    resolver: zodResolver(createIssueSchema),
+  });
+
   return (
     <Box maxWidth={{ sm: "100%", md: "50%" }}>
       {error && (
@@ -37,25 +45,40 @@ const NewIssuePage = () => {
       >
         <TextField.Root
           size="3"
-          placeholder="Enter the issue title"
+          placeholder="Enter your issue title..."
           {...register("title")}
         />
+        {errors.title && (
+          <Text as="p" color="red">
+            {errors.title.message}
+          </Text>
+        )}
         {
           <Controller
-            control={control}
-            render={({ field }) => (
-              <SimpleMdeReact
-                options={{
-                  autofocus: true,
-                  spellChecker: false,
-                  placeholder: "Write your markdown...",
-                }}
-                {...field}
-              />
-            )}
             name="description"
+            control={control}
+            defaultValue=""
+            render={({ field }) => {
+              return (
+                <>
+                  <SimpleMdeReact
+                    options={{
+                      spellChecker: false,
+                      placeholder: "Enter your issue description...",
+                    }}
+                    {...field}
+                  />
+                  {errors.description && (
+                    <Text as="p" color="red">
+                      {errors.description.message}
+                    </Text>
+                  )}
+                </>
+              );
+            }}
           />
         }
+
         <Box maxWidth={{ sm: "25%", md: "50%" }}>
           <Button size="3">Submit New Issue</Button>
         </Box>
