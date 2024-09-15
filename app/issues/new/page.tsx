@@ -1,8 +1,9 @@
 "use client";
-import { Box, Button, TextField } from "@radix-ui/themes";
+import { Box, Button, Callout, TextField } from "@radix-ui/themes";
 import axios from "axios";
 import "easymde/dist/easymde.min.css";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import SimpleMdeReact from "react-simplemde-editor";
 
@@ -13,24 +14,32 @@ interface IssueForm {
 
 const NewIssuePage = () => {
   const router = useRouter();
+  const [error, setError] = useState("");
 
   const { register, control, handleSubmit } = useForm<IssueForm>();
   return (
-    <form
-      className="flex flex-col gap-3"
-      onSubmit={handleSubmit(async (data) => {
-        await axios.post("/api/issues", data);
-        router.push("/issues");
-      })}
-    >
-      <Box maxWidth={{ sm: "100%", md: "50%" }}>
+    <Box maxWidth={{ sm: "100%", md: "50%" }}>
+      {error && (
+        <Callout.Root className="mb-5">
+          <Callout.Text color="red">{error}</Callout.Text>
+        </Callout.Root>
+      )}
+      <form
+        className="flex flex-col gap-3"
+        onSubmit={handleSubmit(async (data) => {
+          try {
+            await axios.post("/api/issues", data);
+            router.push("/issues");
+          } catch (error) {
+            setError("An unexpected error occurred.");
+          }
+        })}
+      >
         <TextField.Root
           size="3"
           placeholder="Enter the issue title"
           {...register("title")}
         />
-      </Box>
-      <Box maxWidth={{ sm: "100%", md: "50%" }}>
         {
           <Controller
             control={control}
@@ -47,11 +56,11 @@ const NewIssuePage = () => {
             name="description"
           />
         }
-      </Box>
-      <Box maxWidth={{ sm: "100%", md: "25%" }}>
-        <Button size="3">Submit New Issue</Button>
-      </Box>
-    </form>
+        <Box maxWidth={{ sm: "25%", md: "50%" }}>
+          <Button size="3">Submit New Issue</Button>
+        </Box>
+      </form>
+    </Box>
   );
 };
 
