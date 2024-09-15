@@ -27,6 +27,15 @@ const NewIssuePage = () => {
     resolver: zodResolver(createIssueSchema),
   });
 
+  const onSubmit = handleSubmit(async (data) => {
+    try {
+      await axios.post("/api/issues", data);
+      router.push("/issues");
+    } catch (error) {
+      setError("An unexpected error occurred.");
+    }
+  });
+
   return (
     <Box maxWidth={{ sm: "100%", md: "50%" }}>
       {error && (
@@ -34,17 +43,7 @@ const NewIssuePage = () => {
           <Callout.Text color="red">{error}</Callout.Text>
         </Callout.Root>
       )}
-      <form
-        className="flex flex-col gap-3"
-        onSubmit={handleSubmit(async (data) => {
-          try {
-            await axios.post("/api/issues", data);
-            router.push("/issues");
-          } catch (error) {
-            setError("An unexpected error occurred.");
-          }
-        })}
-      >
+      <form className="flex flex-col gap-3" onSubmit={onSubmit}>
         <TextField.Root
           size="3"
           placeholder="Enter your issue title..."
