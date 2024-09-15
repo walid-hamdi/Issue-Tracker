@@ -2,7 +2,7 @@
 import ErrorMessage from "@/app/components/ErrorMessage";
 import { createIssueSchema } from "@/app/validationSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Box, Button, Callout, TextField } from "@radix-ui/themes";
+import { Box, Button, Callout, Spinner, TextField } from "@radix-ui/themes";
 import axios from "axios";
 import "easymde/dist/easymde.min.css";
 import { useRouter } from "next/navigation";
@@ -21,7 +21,8 @@ const NewIssuePage = () => {
     register,
     control,
     handleSubmit,
-    formState: { errors },
+
+    formState: { errors, isSubmitting },
   } = useForm<IssueForm>({
     resolver: zodResolver(createIssueSchema),
   });
@@ -73,7 +74,9 @@ const NewIssuePage = () => {
         }
 
         <Box maxWidth={{ sm: "25%", md: "50%" }}>
-          <Button size="3">Submit New Issue</Button>
+          <Button disabled={isSubmitting} size="3">
+            Submit New Issue {isSubmitting && <Spinner />}
+          </Button>
         </Box>
       </form>
     </Box>
