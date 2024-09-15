@@ -1,6 +1,9 @@
 import { prisma } from "@/prisma";
 import { Button, Table } from "@radix-ui/themes";
 import Link from "next/link";
+
+export const dynamic = "force-dynamic";
+
 const IssuesPage = async () => {
   const issues = await prisma.issue.findMany();
 
