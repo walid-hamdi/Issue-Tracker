@@ -1,7 +1,8 @@
 "use client";
+import ErrorMessage from "@/app/components/ErrorMessage";
 import { createIssueSchema } from "@/app/validationSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Box, Button, Callout, Text, TextField } from "@radix-ui/themes";
+import { Box, Button, Callout, TextField } from "@radix-ui/themes";
 import axios from "axios";
 import "easymde/dist/easymde.min.css";
 import { useRouter } from "next/navigation";
@@ -48,11 +49,7 @@ const NewIssuePage = () => {
           placeholder="Enter your issue title..."
           {...register("title")}
         />
-        {errors.title && (
-          <Text as="p" color="red">
-            {errors.title.message}
-          </Text>
-        )}
+        <ErrorMessage>{errors.title?.message}</ErrorMessage>
         {
           <Controller
             name="description"
@@ -68,11 +65,7 @@ const NewIssuePage = () => {
                     }}
                     {...field}
                   />
-                  {errors.description && (
-                    <Text as="p" color="red">
-                      {errors.description.message}
-                    </Text>
-                  )}
+                  <ErrorMessage>{errors.description?.message}</ErrorMessage>
                 </>
               );
             }}
