@@ -60,21 +60,15 @@ const NewIssuePage = () => {
             name="description"
             control={control}
             defaultValue=""
-            render={({ field }) => {
-              return (
-                <>
-                  <SimpleMdeReact
-                    options={{
-                      placeholder: "Enter your issue description...",
-                    }}
-                    {...field}
-                  />
-                  <ErrorMessage>{errors.description?.message}</ErrorMessage>
-                </>
-              );
-            }}
+            render={({ field }) => (
+              <SimpleMdeReact
+                placeholder="Enter your issue description..."
+                {...field}
+              />
+            )}
           />
         }
+        <ErrorMessage>{errors.description?.message}</ErrorMessage>
 
         <Box maxWidth={{ sm: "25%", md: "50%" }}>
           <Button disabled={isSubmitting} size="3">
