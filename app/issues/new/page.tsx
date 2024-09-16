@@ -25,7 +25,7 @@ const NewIssuePage = () => {
     register,
     control,
     handleSubmit,
-
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<IssueForm>({
     resolver: zodResolver(createIssueSchema),
@@ -65,7 +65,6 @@ const NewIssuePage = () => {
                 <>
                   <SimpleMdeReact
                     options={{
-                      spellChecker: false,
                       placeholder: "Enter your issue description...",
                     }}
                     {...field}
