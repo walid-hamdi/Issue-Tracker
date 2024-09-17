@@ -1,6 +1,6 @@
 import { IssueStatusBadge, Link } from "@/app/components";
 import { prisma } from "@/prisma";
-import { Grid, Table } from "@radix-ui/themes";
+import { Table } from "@radix-ui/themes";
 import IssueActions from "./IssueActions";
 export const dynamic = "force-dynamic";
 
