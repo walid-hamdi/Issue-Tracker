@@ -1,6 +1,6 @@
 import { IssueStatusBadge, Link } from "@/app/components";
 import { prisma } from "@/prisma";
-import { Table } from "@radix-ui/themes";
+import { Box, Table } from "@radix-ui/themes";
 import IssueActions from "./IssueActions";
 export const dynamic = "force-dynamic";
 
@@ -9,7 +9,9 @@ const IssuesPage = async () => {
 
   return (
     <>
-      <IssueActions />
+      <Box mb="3">
+        <IssueActions />
+      </Box>
       <Table.Root variant="surface">
         <Table.Header>
           <Table.Row>
