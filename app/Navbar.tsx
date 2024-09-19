@@ -1,7 +1,17 @@
 "use client";
-import { Box, Button, Container, Flex } from "@radix-ui/themes";
+import { CircleIcon } from "@radix-ui/react-icons";
+import {
+  Avatar,
+  Box,
+  Button,
+  Container,
+  DropdownMenu,
+  Flex,
+  Text,
+} from "@radix-ui/themes";
 import classNames from "classnames";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { AiFillBug } from "react-icons/ai";
@@ -41,18 +51,43 @@ const Navbar = () => {
             </ul>
           </Flex>
           <Box>
-            <Button
-              className="cursor-pointer"
-              onClick={() => {
-                if (status === "authenticated")
-                  router.push("/api/auth/signout");
-                else if (status === "unauthenticated")
+            {status === "unauthenticated" && (
+              <Button
+                className="cursor-pointer"
+                onClick={() => {
                   router.push("/api/auth/signin");
-              }}
-            >
-              {status === "authenticated" && "Logout"}
-              {status === "unauthenticated" && "Login"}
-            </Button>
+                }}
+              >
+                Login
+              </Button>
+            )}
+            {status === "authenticated" && (
+              <DropdownMenu.Root>
+                <DropdownMenu.Trigger>
+                  <Avatar
+                    src={data.user?.image!}
+                    fallback="?"
+                    radius="full"
+                    size="2"
+                    className="cursor-pointer"
+                    referrerPolicy="no-referrer"
+                  />
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Content>
+                  <DropdownMenu.Label>
+                    <Text size="2">{data.user?.email}</Text>
+                  </DropdownMenu.Label>
+                  <DropdownMenu.Item>
+                    <Link
+                      className="block cursor-pointer"
+                      href="/api/auth/signout"
+                    >
+                      Logout
+                    </Link>
+                  </DropdownMenu.Item>
+                </DropdownMenu.Content>
+              </DropdownMenu.Root>
+            )}
           </Box>
         </Flex>
       </Container>
