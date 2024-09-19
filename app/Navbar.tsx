@@ -1,4 +1,5 @@
 "use client";
+import { Skeleton } from "@/app/components";
 import {
   Avatar,
   Box,
@@ -66,7 +67,7 @@ const AuthState = () => {
   const { status, data } = useSession();
   const router = useRouter();
 
-  if (status === "loading") return null;
+  if (status === "loading") return <Skeleton width="3rem" />;
 
   if (status === "unauthenticated")
     return (
