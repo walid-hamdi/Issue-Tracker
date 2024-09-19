@@ -4,9 +4,12 @@ import { Issue, User } from "@prisma/client";
 import { Select } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
 const AssigneeSelect = ({ issue }: { issue: Issue }) => {
+  const [isUpdating, setIsUpdating] = useState(false);
+
   const {
     data: users,
     error,
@@ -27,14 +30,20 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
       <Select.Root
         defaultValue={issue.assignedToUserId || "unassigned"}
         onValueChange={async (userId) => {
+          setIsUpdating(true);
           await axios
             .patch(`/api/issues/${issue.id}`, {
-              assignedToUserId: userId || null,
+              assignedToUserId: null,
             })
-            .catch(() => toast.error("Changes couldn't be saved."));
+            .catch((error) =>
+              toast.error("Changes couldn't be saved." + error.message)
+            )
+            .finally(() => {
+              setIsUpdating(false);
+            });
         }}
       >
-        <Select.Trigger placeholder="Assign..." />
+        <Select.Trigger placeholder="Assign..." disabled={isUpdating} />
         <Select.Content>
           <Select.Group>
             <Select.Label>Suggestions</Select.Label>
