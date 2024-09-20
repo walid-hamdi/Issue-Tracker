@@ -33,8 +33,7 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
           setIsUpdating(true);
           await axios
             .patch(`/api/issues/${issue.id}`, {
-              assignedToUserId:
-                userId && userId !== "unassigned" ? userId : null,
+              assignedToUserId: userId !== "unassigned" ? userId : null,
             })
             .catch(() => toast.error("Changes couldn't be saved."))
             .finally(() => {
