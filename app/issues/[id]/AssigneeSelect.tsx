@@ -1,7 +1,7 @@
 "use client";
 import { Skeleton } from "@/app/components";
 import { Issue, User } from "@prisma/client";
-import { Select } from "@radix-ui/themes";
+import { Flex, Select, Spinner } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
@@ -33,17 +33,19 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
           setIsUpdating(true);
           await axios
             .patch(`/api/issues/${issue.id}`, {
-              assignedToUserId: null,
+              assignedToUserId:
+                userId && userId !== "unassigned" ? userId : null,
             })
-            .catch((error) =>
-              toast.error("Changes couldn't be saved." + error.message)
-            )
+            .catch(() => toast.error("Changes couldn't be saved."))
             .finally(() => {
               setIsUpdating(false);
             });
         }}
       >
-        <Select.Trigger placeholder="Assign..." disabled={isUpdating} />
+        <Flex align="center" gap="2">
+          <Select.Trigger placeholder="Assign..." disabled={isUpdating} />
+          {isUpdating && <Spinner />}
+        </Flex>
         <Select.Content>
           <Select.Group>
             <Select.Label>Suggestions</Select.Label>
