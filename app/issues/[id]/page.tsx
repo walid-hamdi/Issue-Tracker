@@ -38,4 +38,22 @@ const IssueDetailPage = async ({ params }: Props) => {
   );
 };
 
+export const generateMetadata = async ({ params }: Props) => {
+  const issue = await prisma.issue.findUnique({
+    where: { id: parseInt(params.id) },
+  });
+
+  if (!issue) {
+    return {
+      title: "Issue Not Found",
+      description: "The issue you are looking for does not exist.",
+    };
+  }
+
+  return {
+    title: `Issue #${issue.id}: ${issue.title} - Details and Management`,
+    description: `View and manage the details of issue #${issue.id} titled "${issue.title}". Assign users, edit, or delete the issue using our comprehensive issue management tools.`,
+  };
+};
+
 export default IssueDetailPage;

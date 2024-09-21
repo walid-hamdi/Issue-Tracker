@@ -4,6 +4,7 @@ import { Flex } from "@radix-ui/themes";
 import Pagination from "../components/Pagination";
 import IssueActions from "./IssueActions";
 import IssueTable, { columnNames, IssueQuery } from "./IssueTable";
+import { Metadata } from "next";
 export const dynamic = "force-dynamic";
 
 interface Props {
@@ -44,6 +45,13 @@ const IssuesPage = async ({ searchParams }: Props) => {
       />
     </Flex>
   );
+};
+
+export const metadata: Metadata = {
+  title:
+    "Advanced Issue Management System: Filter, Sort, and Paginate Issues with Ease",
+  description:
+    "Effortlessly manage and track issues using an advanced system built with Prisma and Next.js. Filter by status, sort dynamically, and paginate through open, in-progress, and closed issues with real-time data, enhanced by Radix UI components for seamless navigation.",
 };
 
 export default IssuesPage;
