@@ -1,6 +1,7 @@
 import { prisma } from "@/prisma";
 import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 import IssueLoadingSkeleton from "./loading";
 
 const IssueForm = dynamic(() => import("@/app/issues/_components/IssueForm"), {
@@ -12,12 +13,14 @@ interface Props {
   params: { id: string };
 }
 
+const fetchUser = cache((issueId: number) =>
+  prisma.issue.findUnique({ where: { id: issueId } })
+);
+
 const EditIssuePage = async ({ params }: Props) => {
   if (isNaN(parseInt(params.id))) notFound();
 
-  const issue = await prisma.issue.findUnique({
-    where: { id: parseInt(params.id) },
-  });
+  const issue = await fetchUser(parseInt(params.id));
 
   if (!issue) notFound();
 
@@ -25,9 +28,7 @@ const EditIssuePage = async ({ params }: Props) => {
 };
 
 export const generateMetadata = async ({ params }: Props) => {
-  const issue = await prisma.issue.findUnique({
-    where: { id: parseInt(params.id) },
-  });
+  const issue = await fetchUser(parseInt(params.id));
 
   if (!issue) {
     return {
